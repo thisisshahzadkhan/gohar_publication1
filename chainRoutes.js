@@ -15,16 +15,30 @@ module.exports = function(app){
     });
     
     app.post('/getaccess',(req,res)=>{
-        // request('http://localhost:4000/hello', function (error, response, body) {
-        //     console.log('body:', body);});
+///////////server 1
         request.post({url:'http://localhost:4000/auth', form:{username:req.body.username,password:req.body.password}}, function (error, response, body) {
                 if(error){res.json({message:'authenticating issue'});}
-                block.find({deligatee:body},function(err,dbres){
+                //console.log(body);
+                //console.log(req.body.devicehash);
+                if(req.body.devicehash===body){console.log('mil gaya');
+                block.find({deligatee:req.body.username},function(err,dbres){
                         if(err){console.log(err);}
                         res.json({policy:dbres});
                 });
+                }
             });
-
+////////////server 2
+            request.post({url:'http://localhost:5000/auth', form:{username:req.body.username,password:req.body.password}}, function (error, response, body) {
+                if(error){res.json({message:'authenticating issue'});}
+                //console.log(body);
+                //console.log(req.body.devicehash);
+                if(req.body.devicehash===body){console.log('mil gaya');
+                block.find({deligatee:req.body.username},function(err,dbres){
+                        if(err){console.log(err);}
+                        res.json({policy:dbres});
+                });
+                }
+            });
     });
 
     app.post('/addpolicy',(req,res)=>{
