@@ -17,9 +17,12 @@ module.exports = function(app){
     app.post('/getaccess',(req,res)=>{
         // request('http://localhost:4000/hello', function (error, response, body) {
         //     console.log('body:', body);});
-        request.post({url:'http://localhost:4000/auth', form:{username:'lineman1',password:'password'}}, function (error, response, body) {
-                console.log('body:', body);
-                
+        request.post({url:'http://localhost:4000/auth', form:{username:req.body.username,password:req.body.password}}, function (error, response, body) {
+                if(error){res.json({message:'authenticating issue'});}
+                block.find({deligatee:body},function(err,dbres){
+                        if(err){console.log(err);}
+                        res.json({policy:dbres});
+                });
             });
 
     });
